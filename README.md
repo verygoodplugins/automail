@@ -307,7 +307,6 @@ npx wrangler d1 execute automail-db \
 ## Roadmap
 
 - [ ] CLI tool: `npx create-automail`
-- [ ] Simple workflow builder
 - [ ] Dashboard UI (view/export/manage signups)
 - [ ] Webhooks support
 - [ ] Segments/tags
@@ -324,14 +323,14 @@ MIT License - see [LICENSE](./LICENSE)
 
 ## Built By
 
-AutoMail is something we created for [automem.ai](https://automem.ai).
+AutoMail is built by the [AutoMem](https://github.com/verygoodplugins/automem) team - giving AI agents persistent memory across tools.
 
 If you found this useful, consider:
 - ⭐️ Starring this repo
-- 🐦 [Following us on Twitter](https://twitter.com/jjack_arturo)
+- 🐦 [Following us on Twitter](https://twitter.com/automem_ai)
 - 🤖 Checking out [AutoMem](https://automem.ai)
 
 ---
 
-**Questions?** Open an issue 🧡
+**Questions?** Open an issue or reach out at hello@automem.ai
 
