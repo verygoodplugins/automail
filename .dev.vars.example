@@ -1,0 +1,11 @@
+# Local development secrets for Wrangler
+# Copy this to .dev.vars and fill in your values
+# This file is used by `wrangler pages dev` for local testing
+
+ADMIN_TOKEN=dev-admin-token-12345
+RESEND_API_KEY=re_your_dev_api_key
+CONFIRM_SECRET=dev-confirm-secret-67890
+
+# Optional
+# TURNSTILE_SECRET_KEY=your-dev-turnstile-secret
+

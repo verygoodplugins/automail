@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoMail - Example Signup Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      margin: 0;
+    }
+    
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 500px;
+      width: 100%;
+    }
+    
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+      color: #111827;
+    }
+    
+    p {
+      color: #6b7280;
+      margin: 0 0 30px 0;
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    input[type="email"] {
+      padding: 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    input[type="email"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+    
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .message {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .message.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+    
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+    
+    .message.show {
+      display: block;
+    }
+    
+    .position {
+      margin-top: 12px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+    }
+    
+    #turnstile-container {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Join the Waitlist</h1>
+    <p>Get early access and be the first to know when we launch.</p>
+    
+    <form id="signup-form">
+      <input
+        type="email"
+        id="email-input"
+        placeholder="Enter your email"
+        required
+        autocomplete="email"
+      />
+      <button type="submit" id="submit-btn">Join Waitlist</button>
+    </form>
+    
+    <!-- Turnstile widget (optional) -->
+    <div id="turnstile-container"></div>
+    
+    <div id="message" class="message"></div>
+    <div id="position" class="position" style="display: none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('signup-form');
+    const emailInput = document.getElementById('email-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const message = document.getElementById('message');
+    const position = document.getElementById('position');
+    
+    // Optional: Turnstile integration
+    // Uncomment if you have Turnstile enabled
+    // let turnstileToken = '';
+    // window.turnstileCallback = function(token) {
+    //   turnstileToken = token;
+    // };
+    
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = emailInput.value.trim();
+      if (!email) return;
+      
+      // Disable form
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Joining...';
+      message.classList.remove('show', 'success', 'error');
+      position.style.display = 'none';
+      
+      try {
+        const response = await fetch('/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            email,
+            source: 'landing',
+            // turnstileToken  // Uncomment if using Turnstile
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          message.textContent = data.message || 'Successfully joined the waitlist!';
+          message.classList.add('show', 'success');
+          
+          if (data.position) {
+            position.textContent = `You're #${data.position} on the list!`;
+            position.style.display = 'block';
+          }
+          
+          // Clear form
+          emailInput.value = '';
+          
+          // Optional: Track with analytics
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'signup', {
+              event_category: 'Waitlist',
+              event_label: 'Landing Page'
+            });
+          }
+        } else {
+          message.textContent = data.error || 'Something went wrong. Please try again.';
+          message.classList.add('show', 'error');
+        }
+      } catch (error) {
+        message.textContent = 'Network error. Please try again.';
+        message.classList.add('show', 'error');
+      } finally {
+        // Re-enable form
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Join Waitlist';
+      }
+    });
+    
+    // Optional: Load Turnstile
+    // Uncomment and add your site key if using Turnstile
+    // (function() {
+    //   const script = document.createElement('script');
+    //   script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    //   script.async = true;
+    //   script.defer = true;
+    //   document.head.appendChild(script);
+    //   
+    //   script.onload = function() {
+    //     window.turnstile.render('#turnstile-container', {
+    //       sitekey: 'YOUR_TURNSTILE_SITE_KEY',
+    //       callback: window.turnstileCallback,
+    //       theme: 'light'
+    //     });
+    //   };
+    // })();
+  </script>
+</body>
+</html>
+
