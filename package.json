@@ -1,0 +1,31 @@
+{
+  "name": "automail",
+  "version": "0.1.0",
+  "description": "Self-hosted email waitlist system on Cloudflare Workers + D1",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev functions --d1=D1",
+    "deploy": "wrangler pages deploy functions",
+    "db:create": "wrangler d1 create automail-db",
+    "db:migrate": "wrangler d1 execute automail-db --file=./schema/d1-schema.sql"
+  },
+  "keywords": [
+    "cloudflare",
+    "d1",
+    "waitlist",
+    "email",
+    "workers",
+    "resend",
+    "self-hosted"
+  ],
+  "author": "AutoMem Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/verygoodplugins/automail.git"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
+

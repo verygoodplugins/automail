@@ -1,0 +1,43 @@
+# AutoMail Configuration
+# Copy this to wrangler.toml and configure for your project
+
+name = "automail"
+compatibility_date = "2024-01-01"
+
+# D1 Database Binding
+[[d1_databases]]
+binding = "D1"
+database_name = "automail-db"
+database_id = "YOUR_DATABASE_ID_HERE"  # Get this from: npm run db:create
+
+# Environment Variables (use wrangler secret for sensitive values)
+[vars]
+# Base URL of your application (used in email links)
+BASE_URL = "https://yourdomain.com"
+
+# Email sender details
+FROM_EMAIL = "no-reply@yourdomain.com"
+FROM_NAME = "Your App Name"
+
+# Optional: Enable double opt-in (requires email confirmation)
+# DOUBLE_OPT_IN = "true"
+
+# Optional: Disable welcome email
+# SEND_WELCOME_EMAIL = "false"
+
+# Optional: Turnstile bot protection (get keys from Cloudflare dashboard)
+# PUBLIC_TURNSTILE_SITE_KEY = "your-site-key"
+# TURNSTILE_SECRET_KEY = "your-secret-key"  # Use wrangler secret for this!
+
+# Secrets (set with: npx wrangler secret put KEY_NAME)
+# ADMIN_TOKEN = "your-secure-random-token"  (REQUIRED - set via wrangler secret)
+# RESEND_API_KEY = "re_..."  (optional - get from resend.com)
+# CONFIRM_SECRET = "another-secure-token"  (optional - falls back to ADMIN_TOKEN)
+
+# Development overrides
+[env.dev]
+[env.dev.vars]
+BASE_URL = "http://localhost:8788"
+FROM_EMAIL = "dev@localhost"
+FROM_NAME = "AutoMail Dev"
+
